@@ -5,7 +5,7 @@ import { motion, AnimatePresence, useAnimate } from 'framer-motion';
 import { twMerge } from 'tailwind-merge';
 import { FiMousePointer } from 'react-icons/fi';
 
-const API_KEY = 'p69sf3H2cEkDl0znNhFe4zkv7Pe4sPEfw6IhoOWC4gLPEhsrq5ppLD1Q';
+const API_KEY = process.env.API_KEY!;
 
 type PexelsPhoto = {
   src: {
