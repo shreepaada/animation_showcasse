@@ -5,13 +5,38 @@ import { motion, AnimatePresence, useAnimate } from 'framer-motion';
 import { twMerge } from 'tailwind-merge';
 import { FiMousePointer } from 'react-icons/fi';
 
-const API_KEY = process.env.API_KEY!;
+// Local image lists
+const aestheticImages = [
+  '/1.jpg',
+  '/2.jpg',
+  '/3.jpeg',
+  '/4.jpg',
+  '/5.webp',
+  '/6.webp',
+  '/7.webp',
+  '/8.jpg',
+  '/9.jpg',
+  '/10.jpg',
+];
 
-type PexelsPhoto = {
-  src: {
-    landscape: string;
-  };
-};
+const trailImagesList = [
+  '/l1.jpg',
+  '/l2.avif',
+  '/l3.jpg',
+  '/l4.avif',
+  '/l5.jpg',
+  '/l6.png',
+  '/l7.avif',
+  '/l8.jpg',
+  '/l9.jpg',
+  '/19.png',
+  '/20.jpg',
+  '/21.jpg',
+  '/22.jpg',
+  '/23.webp',
+  '/24.webp',
+  '/25.jpg',
+];
 
 const Hero: React.FC = () => {
   const [imageUrl, setImageUrl] = useState<string>('');
@@ -19,43 +44,17 @@ const Hero: React.FC = () => {
   const [imageList, setImageList] = useState<string[]>([]);
   const [trailImages, setTrailImages] = useState<string[]>([]);
 
-  const fetchImages = async () => {
+  const loadLocalImages = () => {
     setRefreshing(true);
-    try {
-      const res = await fetch(`https://api.pexels.com/v1/search?query=aesthetic&per_page=10`, {
-        headers: { Authorization: API_KEY },
-      });
-      const data = await res.json();
-      if (data.photos && data.photos.length > 0) {
-        const random: PexelsPhoto = data.photos[Math.floor(Math.random() * data.photos.length)];
-        setImageUrl(random.src.landscape);
-        setImageList(data.photos.map((photo: PexelsPhoto) => photo.src.landscape));
-      }
-    } catch (error) {
-      console.error('Error fetching images from Pexels:', error);
-    } finally {
-      setTimeout(() => setRefreshing(false), 300);
-    }
-  };
-
-  const fetchTrailImages = async () => {
-    try {
-      const res = await fetch(`https://api.pexels.com/v1/search?query=interactive&per_page=16`, {
-        headers: { Authorization: API_KEY },
-      });
-      const data = await res.json();
-      if (data.photos && data.photos.length > 0) {
-        const trailImageUrls = data.photos.map((photo: PexelsPhoto) => photo.src.landscape);
-        setTrailImages(trailImageUrls);
-      }
-    } catch (error) {
-      console.error('Error fetching trail images from Pexels:', error);
-    }
+    const randomImage = aestheticImages[Math.floor(Math.random() * aestheticImages.length)];
+    setImageUrl(randomImage);
+    setImageList(aestheticImages);
+    setTimeout(() => setRefreshing(false), 300);
   };
 
   useEffect(() => {
-    fetchImages();
-    fetchTrailImages();
+    loadLocalImages();
+    setTrailImages(trailImagesList);
   }, []);
 
   return (
@@ -91,7 +90,7 @@ const Hero: React.FC = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={fetchImages}
+              onClick={loadLocalImages}
               className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-xl text-lg font-medium shadow-lg"
             >
               change background
@@ -99,7 +98,7 @@ const Hero: React.FC = () => {
           </motion.div>
 
           {imageUrl && (
-            <div className="rounded-2xl overflow-hidden shadow-2xl w-full h-[400px] z-10 cursor-pointer" onClick={fetchImages}>
+            <div className="rounded-2xl overflow-hidden shadow-2xl w-full h-[400px] z-10 cursor-pointer" onClick={loadLocalImages}>
               <AnimatePresence mode="wait">
                 {!refreshing && (
                   <motion.img
